@@ -75,9 +75,9 @@ func genCacheKey(prefix string, db, table stringx.String, in []*parser.Field) Ke
 		varLeftJoin = append(varLeftJoin, each.Name.Source())
 		varRightJoin = append(varRightJoin, each.Name.Source())
 		keyLeftJoin = append(keyLeftJoin, each.Name.Source())
-		keyRightJoin = append(keyRightJoin, util.EscapeGolangKeyword(stringx.From(each.Name.ToCamel()).Untitle()))
+		keyRightJoin = append(keyRightJoin, util.EscapeGolangKeyword(stringx.From(each.Name.ToCamel()+each.DataType.Value).Untitle()))
 		keyRightArgJoin = append(keyRightArgJoin, "%v")
-		dataRightJoin = append(dataRightJoin, "data."+each.Name.ToCamel())
+		dataRightJoin = append(dataRightJoin, "data."+each.Name.ToCamel()+each.DataType.Value)
 		fieldNameJoin = append(fieldNameJoin, each.Name.Source())
 	}
 	varLeftJoin = append(varLeftJoin, "prefix")
