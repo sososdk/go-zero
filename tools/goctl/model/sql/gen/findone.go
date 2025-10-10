@@ -22,7 +22,7 @@ func genFindOne(table Table, withCache, postgreSql bool) (string, string, error)
 			"lowerStartCamelObject":     stringx.From(camel).Untitle(),
 			"originalPrimaryKey":        wrapWithRawString(table.PrimaryKey.Name.Source(), postgreSql),
 			"lowerStartCamelPrimaryKey": util.EscapeGolangKeyword(stringx.From(table.PrimaryKey.Name.ToCamel()).Untitle()),
-			"dataType":                  table.PrimaryKey.DataType,
+			"dataType":                  table.PrimaryKey.DataType.Name,
 			"cacheKey":                  table.PrimaryCacheKey.KeyExpression,
 			"cacheKeyVariable":          table.PrimaryCacheKey.KeyLeft,
 			"postgreSql":                postgreSql,
@@ -42,7 +42,7 @@ func genFindOne(table Table, withCache, postgreSql bool) (string, string, error)
 		Execute(map[string]any{
 			"upperStartCamelObject":     camel,
 			"lowerStartCamelPrimaryKey": util.EscapeGolangKeyword(stringx.From(table.PrimaryKey.Name.ToCamel()).Untitle()),
-			"dataType":                  table.PrimaryKey.DataType,
+			"dataType":                  table.PrimaryKey.DataType.Name,
 			"data":                      table,
 		})
 	if err != nil {

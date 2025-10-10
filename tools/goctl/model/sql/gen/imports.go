@@ -13,12 +13,12 @@ func genImports(table Table, withCache, timeImport bool) (string, error) {
 	var thirdImports []string
 	var m = map[string]struct{}{}
 	for _, c := range table.Fields {
-		if len(c.ThirdPkg) > 0 {
-			if _, ok := m[c.ThirdPkg]; ok {
+		if len(c.DataType.Pkg) > 0 {
+			if _, ok := m[c.DataType.Pkg]; ok {
 				continue
 			}
-			m[c.ThirdPkg] = struct{}{}
-			thirdImports = append(thirdImports, fmt.Sprintf("%q", c.ThirdPkg))
+			m[c.DataType.Pkg] = struct{}{}
+			thirdImports = append(thirdImports, fmt.Sprintf("%q", c.DataType.Pkg))
 		}
 	}
 

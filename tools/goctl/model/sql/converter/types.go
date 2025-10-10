@@ -202,82 +202,105 @@ var commonMysqlDataTypeMapString = map[string]string{
 	"ltree":           "[]byte",
 }
 
+type DataType struct {
+	Name  string
+	Value string
+	Pkg   string
+}
+
 // ConvertDataType converts mysql column type into golang type
-func ConvertDataType(dataBaseType int, isDefaultNull, unsigned, strict bool) (string, string, error) {
+func ConvertDataType(dataBaseType int, isDefaultNull, unsigned, strict bool) (*DataType, error) {
 	if env.UseExperimental() {
 		tp, ok := commonMysqlDataTypeMap[dataBaseType]
 		if !ok {
-			return "", "", fmt.Errorf("unsupported database type: %v", dataBaseType)
+			return nil, fmt.Errorf("unsupported database type: %v", dataBaseType)
 		}
 
-		goType, thirdPkg, _, err := ConvertStringDataType(tp, isDefaultNull, unsigned, strict)
-		return goType, thirdPkg, err
+		dt, _, err := ConvertStringDataType(tp, isDefaultNull, unsigned, strict)
+		return dt, err
 	}
 
 	// the following are the old version compatibility code.
 	tp, ok := commonMysqlDataTypeMapInt[dataBaseType]
 	if !ok {
-		return "", "", fmt.Errorf("unsupported database type: %v", dataBaseType)
+		return nil, fmt.Errorf("unsupported database type: %v", dataBaseType)
 	}
 
-	return mayConvertNullType(tp, isDefaultNull, unsigned, strict), "", nil
+	return &DataType{Name: mayConvertNullType(tp, isDefaultNull, unsigned, strict)}, nil
 }
 
 // ConvertStringDataType converts mysql column type into golang type
-func ConvertStringDataType(dataBaseType string, isDefaultNull, unsigned, strict bool) (
-	goType string, thirdPkg string, isPQArray bool, err error) {
+func ConvertStringDataType(dataBaseType string, isDefaultNull, unsigned, strict bool) (dataType *DataType, isPQArray bool, err error) {
 	if env.UseExperimental() {
-		customTp, thirdImport := convertDatatypeWithConfig(dataBaseType, isDefaultNull, unsigned)
-		if len(customTp) != 0 {
-			return customTp, thirdImport, false, nil
+		dt, ok := convertDatatypeWithConfig(dataBaseType, isDefaultNull, unsigned)
+		if ok {
+			return dt, false, nil
 		}
 
 		tp, ok := commonMysqlDataTypeMapString[strings.ToLower(dataBaseType)]
 		if !ok {
-			return "", "", false, fmt.Errorf("unsupported database type: %s", dataBaseType)
+			return nil, false, fmt.Errorf("unsupported database type: %s", dataBaseType)
 		}
 
 		if strings.HasPrefix(dataBaseType, "_") {
-			return tp, "", true, nil
+			return &DataType{Name: tp}, true, nil
 		}
 
-		return mayConvertNullType(tp, isDefaultNull, unsigned, strict), "", false, nil
+		return &DataType{Name: mayConvertNullType(tp, isDefaultNull, unsigned, strict)}, false, nil
 	}
 
 	// the following are the old version compatibility code.
 	tp, ok := commonMysqlDataTypeMapString[strings.ToLower(dataBaseType)]
 	if !ok {
-		return "", "", false, fmt.Errorf("unsupported database type: %s", dataBaseType)
+		return nil, false, fmt.Errorf("unsupported database type: %s", dataBaseType)
 	}
 
 	if strings.HasPrefix(dataBaseType, "_") {
-		return tp, "", true, nil
+		return &DataType{Name: tp}, true, nil
 	}
 
-	return mayConvertNullType(tp, isDefaultNull, unsigned, strict), "", false, nil
+	return &DataType{Name: mayConvertNullType(tp, isDefaultNull, unsigned, strict)}, false, nil
 }
 
-func convertDatatypeWithConfig(dataBaseType string, isDefaultNull, unsigned bool) (string, string) {
+func convertDatatypeWithConfig(dataBaseType string, isDefaultNull, unsigned bool) (*DataType, bool) {
 	externalConfig, err := config.GetExternalConfig()
 	if err != nil {
-		return "", ""
+		return nil, false
 	}
 
-	opt, ok := externalConfig.Model.TypesMap[strings.ToLower(dataBaseType)]
-	if !ok || (len(opt.Type) == 0 && len(opt.UnsignedType) == 0 && len(opt.NullType) == 0) {
-		return "", ""
+	opts, ok := externalConfig.Model.TypesMap[strings.ToLower(dataBaseType)]
+	if !ok || (len(opts) == 0) {
+		return nil, false
 	}
 
-	if isDefaultNull {
-		if len(opt.NullType) != 0 {
-			return opt.NullType, opt.Pkg
-		}
-	} else if unsigned {
-		if len(opt.UnsignedType) != 0 {
-			return opt.UnsignedType, opt.Pkg
+	return matchDataTypeOption(isDefaultNull, unsigned, opts)
+}
+
+func matchDataTypeOption(isDefaultNull, unsigned bool, opts []config.ModelTypeMapOption) (*DataType, bool) {
+	for _, opt := range opts {
+		if unsigned && isDefaultNull && opt.IsUnsigned && opt.IsDefaultNull {
+			return &DataType{Name: opt.Name, Value: opt.Value, Pkg: opt.Pkg}, true
 		}
 	}
-	return opt.Type, opt.Pkg
+
+	for _, opt := range opts {
+		if unsigned && opt.IsUnsigned && !opt.IsDefaultNull {
+			return &DataType{Name: opt.Name, Value: opt.Value, Pkg: opt.Pkg}, true
+		}
+	}
+
+	for _, opt := range opts {
+		if isDefaultNull && opt.IsDefaultNull && !opt.IsUnsigned {
+			return &DataType{Name: opt.Name, Value: opt.Value, Pkg: opt.Pkg}, true
+		}
+	}
+
+	if len(opts) > 0 {
+		opt := opts[0]
+		return &DataType{Name: opt.Name, Value: opt.Value, Pkg: opt.Pkg}, true
+	}
+
+	return nil, false
 }
 
 func mayConvertNullType(goDataType string, isDefaultNull, unsigned, strict bool) string {

@@ -39,7 +39,7 @@ func genField(table Table, field *parser.Field) (string, error) {
 		Parse(text).
 		Execute(map[string]any{
 			"name":       util.SafeString(field.Name.ToCamel()),
-			"type":       field.DataType,
+			"type":       field.DataType.Name,
 			"tag":        tag,
 			"hasComment": field.Comment != "",
 			"comment":    field.Comment,

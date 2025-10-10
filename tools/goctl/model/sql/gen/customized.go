@@ -52,7 +52,7 @@ func genCustomized(table Table, withCache, postgreSql bool) (string, error) {
 			NameOriginal:    field.NameOriginal,
 			UpperName:       camel,
 			LowerName:       stringx.From(camel).Untitle(),
-			DataType:        field.DataType,
+			DataType:        field.DataType.Name,
 			Comment:         field.Comment,
 			SeqInIndex:      field.SeqInIndex,
 			OrdinalPosition: field.OrdinalPosition,

@@ -38,8 +38,7 @@ type (
 	Field struct {
 		NameOriginal    string
 		Name            stringx.String
-		ThirdPkg        string
-		DataType        string
+		DataType        converter.DataType
 		Comment         string
 		SeqInIndex      int
 		OrdinalPosition int
@@ -220,14 +219,14 @@ func convertColumns(columns []*parser.Column, primaryColumn string, strict bool)
 			}
 		}
 
-		dataType, thirdPkg, err := converter.ConvertDataType(column.DataType.Type(), isDefaultNull, column.DataType.Unsigned(), strict)
+		dataType, err := converter.ConvertDataType(column.DataType.Type(), isDefaultNull, column.DataType.Unsigned(), strict)
 		if err != nil {
 			return Primary{}, nil, err
 		}
 
 		if column.Constraint != nil {
 			if column.Name == primaryColumn {
-				if !column.Constraint.AutoIncrement && dataType == "int64" {
+				if !column.Constraint.AutoIncrement && dataType.Name == "int64" {
 					log.Warning("[convertColumns]: The primary key %q is recommended to add constraint `AUTO_INCREMENT`", column.Name)
 				}
 			} else if column.Constraint.NotNull && !column.Constraint.HasDefaultValue {
@@ -237,8 +236,7 @@ func convertColumns(columns []*parser.Column, primaryColumn string, strict bool)
 
 		var field Field
 		field.Name = stringx.From(column.Name)
-		field.ThirdPkg = thirdPkg
-		field.DataType = dataType
+		field.DataType = *dataType
 		field.Comment = util.TrimNewLine(comment)
 
 		if field.Name.Source() == primaryColumn {
@@ -258,7 +256,7 @@ func convertColumns(columns []*parser.Column, primaryColumn string, strict bool)
 // ContainsTime returns true if contains golang type time.Time
 func (t *Table) ContainsTime() bool {
 	for _, item := range t.Fields {
-		if item.DataType == timeImport {
+		if item.DataType.Name == timeImport {
 			return true
 		}
 	}
@@ -269,7 +267,7 @@ func (t *Table) ContainsTime() bool {
 func ConvertDataType(table *model.Table, strict bool) (*Table, error) {
 	isPrimaryDefaultNull := table.PrimaryKey.ColumnDefault == nil && table.PrimaryKey.IsNullAble == "YES"
 	isPrimaryUnsigned := strings.Contains(table.PrimaryKey.DbColumn.ColumnType, "unsigned")
-	primaryDataType, thirdPkg, containsPQ, err := converter.ConvertStringDataType(table.PrimaryKey.DataType, isPrimaryDefaultNull, isPrimaryUnsigned, strict)
+	primaryDataType, containsPQ, err := converter.ConvertStringDataType(table.PrimaryKey.DataType, isPrimaryDefaultNull, isPrimaryUnsigned, strict)
 	if err != nil {
 		return nil, err
 	}
@@ -287,8 +285,7 @@ func ConvertDataType(table *model.Table, strict bool) (*Table, error) {
 	reply.PrimaryKey = Primary{
 		Field: Field{
 			Name:            stringx.From(table.PrimaryKey.Name),
-			ThirdPkg:        thirdPkg,
-			DataType:        primaryDataType,
+			DataType:        *primaryDataType,
 			Comment:         table.PrimaryKey.Comment,
 			SeqInIndex:      seqInIndex,
 			OrdinalPosition: table.PrimaryKey.OrdinalPosition,
@@ -354,7 +351,7 @@ func getTableFields(table *model.Table, strict bool) (map[string]*Field, error) 
 	for _, each := range table.Columns {
 		isDefaultNull := each.ColumnDefault == nil && each.IsNullAble == "YES"
 		isPrimaryUnsigned := strings.Contains(each.ColumnType, "unsigned")
-		dt, thirdPkg, containsPQ, err := converter.ConvertStringDataType(each.DataType, isDefaultNull, isPrimaryUnsigned, strict)
+		dt, containsPQ, err := converter.ConvertStringDataType(each.DataType, isDefaultNull, isPrimaryUnsigned, strict)
 		if err != nil {
 			return nil, err
 		}
@@ -366,8 +363,7 @@ func getTableFields(table *model.Table, strict bool) (map[string]*Field, error) 
 		field := &Field{
 			NameOriginal:    each.Name,
 			Name:            stringx.From(each.Name),
-			ThirdPkg:        thirdPkg,
-			DataType:        dt,
+			DataType:        *dt,
 			Comment:         each.Comment,
 			SeqInIndex:      columnSeqInIndex,
 			OrdinalPosition: each.OrdinalPosition,

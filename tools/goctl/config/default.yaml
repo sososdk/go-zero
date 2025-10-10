@@ -1,160 +1,326 @@
 model:
   types_map:
     bigint:
-      null_type: sql.NullInt64
-      type: int64
-      unsigned_type: uint64
+      - type: int64
+      - type: sql.Null[int64]
+        is_default_null: true
+        value: .V
+      - type: uint64
+        is_unsigned: true
+      - type: sql.Null[uint64]
+        is_default_null: true
+        is_unsigned: true
+        value: .V
     dec:
-      null_type: sql.NullFloat64
-      type: float64
+      - type: float64
+      - type: sql.Null[float64]
+        is_default_null: true
+        value: .V
     decimal:
-      null_type: sql.NullFloat64
-      type: float64
+      - type: float64
+      - type: sql.Null[float64]
+        is_default_null: true
+        value: .V
     numeric:
-      null_type: sql.NullFloat64
-      type: float64
+      - type: float64
+      - type: sql.Null[float64]
+        is_default_null: true
+        value: .V
     double:
-      null_type: sql.NullFloat64
-      type: float64
+      - type: float64
+      - type: sql.Null[float64]
+        is_default_null: true
+        value: .V
     float:
-      null_type: sql.NullFloat64
-      type: float64
+      - type: float64
+      - type: sql.Null[float64]
+        is_default_null: true
+        value: .V
     float4:
-      null_type: sql.NullFloat64
-      type: float64
+      - type: float64
+      - type: sql.Null[float64]
+        is_default_null: true
+        value: .V
     float8:
-      null_type: sql.NullFloat64
-      type: float64
+      - type: float64
+      - type: sql.Null[float64]
+        is_default_null: true
+        value: .V
     int:
-      null_type: sql.NullInt64
-      type: int64
-      unsigned_type: uint64
+      - type: int64
+      - type: sql.Null[int64]
+        is_default_null: true
+        value: .V
+      - type: uint64
+        is_unsigned: true
+      - type: sql.Null[uint64]
+        is_default_null: true
+        is_unsigned: true
+        value: .V
     int1:
-      null_type: sql.NullInt64
-      type: int64
-      unsigned_type: uint64
+      - type: int64
+      - type: sql.Null[int64]
+        is_default_null: true
+        value: .V
+      - type: uint64
+        is_unsigned: true
+      - type: sql.Null[uint64]
+        is_default_null: true
+        is_unsigned: true
+        value: .V
     int2:
-      null_type: sql.NullInt64
-      type: int64
-      unsigned_type: uint64
+      - type: int64
+      - type: sql.Null[int64]
+        is_default_null: true
+        value: .V
+      - type: uint64
+        is_unsigned: true
+      - type: sql.Null[uint64]
+        is_default_null: true
+        is_unsigned: true
+        value: .V
     int3:
-      null_type: sql.NullInt64
-      type: int64
-      unsigned_type: uint64
+      - type: int64
+      - type: sql.Null[int64]
+        is_default_null: true
+        value: .V
+      - type: uint64
+        is_unsigned: true
+      - type: sql.Null[uint64]
+        is_default_null: true
+        is_unsigned: true
+        value: .V
     int4:
-      null_type: sql.NullInt64
-      type: int64
-      unsigned_type: uint64
+      - type: int64
+      - type: sql.Null[int64]
+        is_default_null: true
+        value: .V
+      - type: uint64
+        is_unsigned: true
+      - type: sql.Null[uint64]
+        is_default_null: true
+        is_unsigned: true
+        value: .V
     int8:
-      null_type: sql.NullInt64
-      type: int64
-      unsigned_type: uint64
+      - type: int64
+      - type: sql.Null[int64]
+        is_default_null: true
+        value: .V
+      - type: uint64
+        is_unsigned: true
+      - type: sql.Null[uint64]
+        is_default_null: true
+        is_unsigned: true
+        value: .V
     integer:
-      null_type: sql.NullInt64
-      type: int64
-      unsigned_type: uint64
+      - type: int64
+      - type: sql.Null[int64]
+        is_default_null: true
+        value: .V
+      - type: uint64
+        is_unsigned: true
+      - type: sql.Null[uint64]
+        is_default_null: true
+        is_unsigned: true
+        value: .V
     mediumint:
-      null_type: sql.NullInt64
-      type: int64
-      unsigned_type: uint64
+      - type: int64
+      - type: sql.Null[int64]
+        is_default_null: true
+        value: .V
+      - type: uint64
+        is_unsigned: true
+      - type: sql.Null[uint64]
+        is_default_null: true
+        is_unsigned: true
+        value: .V
     middleint:
-      null_type: sql.NullInt64
-      type: int64
-      unsigned_type: uint64
+      - type: int64
+      - type: sql.Null[int64]
+        is_default_null: true
+        value: .V
+      - type: uint64
+        is_unsigned: true
+      - type: sql.Null[uint64]
+        is_default_null: true
+        is_unsigned: true
+        value: .V
     smallint:
-      null_type: sql.NullInt64
-      type: int64
-      unsigned_type: uint64
+      - type: int64
+      - type: sql.Null[int64]
+        is_default_null: true
+        value: .V
+      - type: uint64
+        is_unsigned: true
+      - type: sql.Null[uint64]
+        is_default_null: true
+        is_unsigned: true
+        value: .V
     tinyint:
-      null_type: sql.NullInt64
-      type: int64
-      unsigned_type: uint64
+      - type: int64
+      - type: sql.Null[int64]
+        is_default_null: true
+        value: .V
+      - type: uint64
+        is_unsigned: true
+      - type: sql.Null[uint64]
+        is_default_null: true
+        is_unsigned: true
+        value: .V
     date:
-      null_type: sql.NullTime
-      type: time.Time
+      - type: time.Time
+      - type: sql.Null[time.Time]
+        is_default_null: true
+        value: .V
     datetime:
-      null_type: sql.NullTime
-      type: time.Time
+      - type: time.Time
+      - type: sql.Null[time.Time]
+        is_default_null: true
+        value: .V
     timestamp:
-      null_type: sql.NullTime
-      type: time.Time
+      - type: time.Time
+      - type: sql.Null[time.Time]
+        is_default_null: true
+        value: .V
     time:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     year:
-      null_type: sql.NullInt64
-      type: int64
-      unsigned_type: uint64
+      - type: int64
+      - type: sql.Null[int64]
+        is_default_null: true
+        value: .V
+      - type: uint64
+        is_unsigned: true
+      - type: sql.Null[uint64]
+        is_default_null: true
+        is_unsigned: true
+        value: .V
     bit:
-      null_type: sql.NullByte
-      type: byte
-      unsigned_type: byte
+      - type: byte
+      - type: sql.Null[byte]
+        is_default_null: true
+        value: .V
+      - type: byte
+        is_unsigned: true
+      - type: sql.Null[byte]
+        is_default_null: true
+        is_unsigned: true
+        value: .V
     bool:
-      null_type: sql.NullBool
-      type: bool
+      - type: bool
+      - type: sql.Null[bool]
+        is_default_null: true
+        value: .V
     boolean:
-      null_type: sql.NullBool
-      type: bool
+      - type: bool
+      - type: sql.Null[bool]
+        is_default_null: true
+        value: .V
     char:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     varchar:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     nvarchar:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     nchar:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     character:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     longvarchar:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     linestring:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     multilinestring:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     binary:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     varbinary:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     tinytext:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     text:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     mediumtext:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     longtext:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     enum:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     set:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     json:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     blob:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     longblob:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     mediumblob:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
     tinyblob:
-      null_type: sql.NullString
-      type: string
+      - type: string
+      - type: sql.Null[string]
+        is_default_null: true
+        value: .V
