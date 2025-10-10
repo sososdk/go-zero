@@ -43,19 +43,22 @@ type (
 	// Model defines the configuration for the model code generation.
 	Model struct {
 		// TypesMap: custom Data Type Mapping Table.
-		TypesMap map[string]ModelTypeMapOption `yaml:"types_map,omitempty" `
+		TypesMap map[string][]ModelTypeMapOption `yaml:"types_map,omitempty" `
 	}
 
 	// ModelTypeMapOption custom Type Options.
 	ModelTypeMapOption struct {
-		// Type: valid when not using UnsignedType and NullType.
-		Type string `yaml:"type"`
+		// Name: go type name.
+		Name string `yaml:"type"`
 
-		// UnsignedType: valid when not using  NullType.
-		UnsignedType string `yaml:"unsigned_type,omitempty"`
+		// Value: for cache key when this is a wrap type.
+		Value string `yaml:"value"`
 
-		// NullType: priority use.
-		NullType string `yaml:"null_type,omitempty"`
+		// IsUnsigned: for unsigned type.
+		IsUnsigned bool `yaml:"is_unsigned,omitempty"`
+
+		// IsNull: for null type.
+		IsDefaultNull bool `yaml:"is_default_null,omitempty"`
 
 		// Pkg defines the package of the custom type.
 		Pkg string `yaml:"pkg,omitempty"`
